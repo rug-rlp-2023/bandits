@@ -80,7 +80,7 @@ Your implementation of the bandits as well as your RL agents should be here. Sin
 
 #### `data/`
 
-All your results should be here. This includes all the figures you use in your report as well as the files containing the raw data, for example `.csv`. Note that this directory is included in the `.gitignore`. This means that its contents should not be pushed to GitHub.
+All your results should be here. This includes all the figures you use in your report as well as the files containing the raw data, for example `.csv`.
 
 #### `analysis/`
 
