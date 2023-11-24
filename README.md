@@ -105,6 +105,16 @@ Follow these steps if you are using the `pip` package manager.
 
 If you are using the `conda` package manager, you should first install `pip` inside of your `conda` environment: `conda install pip`. Follow the same steps as in the `pip` case. If you run into problems, consult this wonderful [StackOverflow question](https://stackoverflow.com/questions/41060382/using-pip-to-install-packages-to-anaconda-environment). If the issues, persist, contact the TA.
 
+#### Sample
+
+After following the above steps, your `requirements.txt` file could look somewhat like this:
+
+```
+matplotlib==3.6.2
+numpy==1.23.5
+pandas==1.5.1
+```
+
 ## Submission
 
 You need to submit both the code and the report. The report should be submitted through Brightspace in a standard manner. The code should be submitted on GitHub by opening a Pull Request from the branch you were working on to the `submission` branch. Before you do so, make sure that:
