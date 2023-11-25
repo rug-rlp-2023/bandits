@@ -1,0 +1,6 @@
+1. I chose a variance of 1 for each gausian distribution bandit arm as it simplifies the model and does not assume an overly complex problem plane. Randomizing the variance can result in needing much
+more training steps and could not converge to a solution. A value for variances of 1 indicates that most of the samples in the distribution will be centered around 2 units away from the mean which is a standart value I think and is sufficient for the
+task because its simple enough.
+
+Through running a simulation of n=100, k=10, t=100 starting at epsilon = 0.01 and incrementing epsilon by 0.01 each round for 100 different experiments and averaging the number of pulls
+made from the highest potential bandit arm the best value to pick for epsilon was 3.4
