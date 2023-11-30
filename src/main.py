@@ -30,73 +30,84 @@ if __name__ == "__main__":
     bernoulli_assist = 0
     best_param_gaus = -1
     best_param_bern = -1
+    best_temp2_gaus = -1
+    best_temp2_bern =-1
 
-    temp = 2
-    while temp > 0:
-        for strategy in strategies:
-            average_gaussian_reward = 0
-            average_bernoulli_reward = 0
-            correct_pulls_gaussian = 0
-            correct_pulls_bernoulli = 0
+    temp2 = 2
+    while temp2 >0:
+        temp = 2
+        while temp > 0:
+            for strategy in strategies:
+                average_gaussian_reward = 0
+                average_bernoulli_reward = 0
+                correct_pulls_gaussian = 0
+                correct_pulls_bernoulli = 0
 
-            for bandit in gaussian_bandits:
-                #make agent with strategy
-                agent = Agent(strategy)
-                agent.set_bandit(bandit)
-                agent.temperature_action = temp
-                # For T choose an arm based on agent strategy
-                for iteration in range(t):
-                    agent.choose_arm()
+                for bandit in gaussian_bandits:
+                    #make agent with strategy
+                    agent = Agent(strategy)
+                    agent.set_bandit(bandit)
+                    agent.temperature_action = temp
+                    agent.a_prefence_rate = temp2
+                    # For T choose an arm based on agent strategy
+                    for iteration in range(t):
+                        agent.choose_arm()
+                    """
+                    print("---NEXT AGENT GAUSSIAN---")
+                    print("strategy: ", agent.strategy)
+                    print("total reward: ", agent.cumilative_reward)
+                    print("correct pulls:", agent.arm_pulls[np.argmax(bandit.means)])
+                    print("arm pull array: ", agent.arm_pulls)
+                    print("q_value array: ", agent.q_values)
+                    print("action preferences:", agent.action_preferences)
+                    print("bandit arm means: ", bandit.means)
+                    """
+                    average_gaussian_reward += agent.cumilative_reward
+                    correct_pulls_gaussian += agent.arm_pulls[np.argmax(bandit.means)]
+                for bandit in bernoulli_bandits:
+                    #make agent with strategy
+                    agent = Agent(strategy)
+                    agent.set_bandit(bandit)
+                    agent.temperature_action = temp
+                    agent.a_prefence_rate = temp2
+                    # For T choose an arm based on agent strategy
+                    for iteration in range(t):
+                        agent.choose_arm()
+                    """
+                    print("---NEXT AGENT BERNOULLI---")
+                    print("strategy: ", agent.strategy)
+                    print("total reward: ", agent.cumilative_reward)
+                    print("correct pulls:", agent.arm_pulls[np.argmax(bandit.probabilities)])
+                    print("arm pull array: ", agent.arm_pulls)
+                    print("q_value array: ", agent.q_values)
+                    print("action preferences:", agent.action_preferences)
+                    print("bandit arm means: ", bandit.probabilities)
+                    """
+                    average_bernoulli_reward += agent.cumilative_reward
+                    correct_pulls_bernoulli += agent.arm_pulls[np.argmax(bandit.probabilities)]
                 """
-                print("---NEXT AGENT GAUSSIAN---")
-                print("strategy: ", agent.strategy)
-                print("total reward: ", agent.cumilative_reward)
-                print("correct pulls:", agent.arm_pulls[np.argmax(bandit.means)])
-                print("arm pull array: ", agent.arm_pulls)
-                print("q_value array: ", agent.q_values)
-                print("action preferences:", agent.action_preferences)
-                print("bandit arm means: ", bandit.means)
+                print(strategy, "agent: ")
+                print("\tAVG reward gaussian =", average_gaussian_reward / n)
+                print("\tCorrect pulls gaussian =", correct_pulls_gaussian * 100 / t / n, "%")
+                print("\tAVG reward bernoulli =", average_bernoulli_reward / n)
+                print("\tCorrect pulls bernoulli =", correct_pulls_bernoulli * 100 / t / n, "%")
                 """
-                average_gaussian_reward += agent.cumilative_reward
-                correct_pulls_gaussian += agent.arm_pulls[np.argmax(bandit.means)]
-            for bandit in bernoulli_bandits:
-                #make agent with strategy
-                agent = Agent(strategy)
-                agent.set_bandit(bandit)
-                # For T choose an arm based on agent strategy
-                for iteration in range(t):
-                    agent.choose_arm()
-                """
-                print("---NEXT AGENT BERNOULLI---")
-                print("strategy: ", agent.strategy)
-                print("total reward: ", agent.cumilative_reward)
-                print("correct pulls:", agent.arm_pulls[np.argmax(bandit.probabilities)])
-                print("arm pull array: ", agent.arm_pulls)
-                print("q_value array: ", agent.q_values)
-                print("action preferences:", agent.action_preferences)
-                print("bandit arm means: ", bandit.probabilities)
-                """
-                average_bernoulli_reward += agent.cumilative_reward
-                correct_pulls_bernoulli += agent.arm_pulls[np.argmax(bandit.probabilities)]
-            """
-            print(strategy, "agent: ")
-            print("\tAVG reward gaussian =", average_gaussian_reward / n)
-            print("\tCorrect pulls gaussian =", correct_pulls_gaussian * 100 / t / n, "%")
-            print("\tAVG reward bernoulli =", average_bernoulli_reward / n)
-            print("\tCorrect pulls bernoulli =", correct_pulls_bernoulli * 100 / t / n, "%")
-            """
+                
+                if best_pulls_gaussian < correct_pulls_gaussian * 100 / t / n:
+                    best_pulls_gaussian = correct_pulls_gaussian * 100 / t / n
+                    gaussian_assist = correct_pulls_bernoulli * 100 / t / n
+                    best_param_gaus = temp
+                    best_temp2_gaus = temp2
+                if best_pulls_bernoulli < correct_pulls_bernoulli * 100 / t / n:
+                    best_pulls_bernoulli = correct_pulls_bernoulli * 100 / t / n
+                    bernoulli_assist = correct_pulls_gaussian * 100 / t / n
+                    best_param_bern = temp
+                    best_temp2_bern = temp2
             
-            if best_pulls_gaussian < correct_pulls_gaussian * 100 / t / n:
-                best_pulls_gaussian = correct_pulls_gaussian * 100 / t / n
-                bernoulli_assist = correct_pulls_bernoulli * 100 / t / n
-                best_param_gaus = temp
-            if best_pulls_bernoulli < correct_pulls_bernoulli * 100 / t / n:
-                best_pulls_bernoulli = correct_pulls_bernoulli * 100 / t / n
-                gaussian_assist = correct_pulls_gaussian * 100 / t / n
-                best_param_bern = temp
-        
-        temp -= 0.1
-    print("Gaus:",best_pulls_gaussian, gaussian_assist, "\nBern:", best_pulls_bernoulli, bernoulli_assist, "\nParam val:", best_param_gaus, best_param_bern)
+            temp -= 0.1
+        temp2 -=0.1
+
+    print("Gaus:",best_pulls_gaussian, gaussian_assist, "\nBern:", best_pulls_bernoulli, bernoulli_assist, "\nParam val:", best_param_gaus, best_param_bern, best_temp2_gaus, best_temp2_bern)
 
 
         

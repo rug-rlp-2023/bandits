@@ -8,11 +8,11 @@ class Agent:
         self.cumilative_reward= 0
         # Strategy Variables
         self.temperature = 0.5
-        self.temperature_action = 2
+        self.temperature_action = 1
         self.epsilon = 0.3
         self.timesteps = 0
         self.c = 1 
-        self.a_prefence_rate = 1
+        self.a_prefence_rate = 0.5
         
     def set_bandit(self, new_bandit):
         if self.strategy == "optimistic greedy":
@@ -30,7 +30,7 @@ class Agent:
         self.timesteps += 1
         # ACTION PREFERENCES
         if self.strategy == "action preference":
-            exponentiated_values = np.exp(self.action_preferences / self.temperature)
+            exponentiated_values = np.exp(self.action_preferences / self.temperature_action)
             probabilities = exponentiated_values / np.sum(exponentiated_values)
             chosen_arm = np.random.choice(len(self.action_preferences), p=probabilities)
         # SOFTMAX
