@@ -4,3 +4,6 @@ task because its simple enough.
 
 Through running a simulation of n=100, k=10, t=100 starting at epsilon = 0.01 and incrementing epsilon by 0.01 each round for 100 different experiments and averaging the number of pulls
 made from the highest potential bandit arm the best value to pick for epsilon was 3.4
+
+Benchmarking variables 
+t= 500, n=100, k=5, step = 0.1
