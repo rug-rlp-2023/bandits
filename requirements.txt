@@ -1,0 +1,4 @@
+numpy
+csv
+os
+matplotlib.pyplot
